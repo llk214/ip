@@ -1,0 +1,37 @@
+666cc09 Wed Feb 4 15:45:16 2026 Add Level-4: ToDo, Event, Deadline Implement three task types with inheritance (A-Inheritance): - Create Todo class for tasks without dates - Create Deadline class for tasks with deadlines - Create Event class for tasks with start and end times - Use polymorphism with Task[] array - Add commands: todo, deadline, event - Changed file name to claude
+8aa3354 Fri Jan 30 17:19:28 2026 Add Level-3: Mark as Done
+f84cc59 Wed Jan 28 13:58:37 2026 Add Level-2: Add, List
+e61ec24 Sat Feb 7 21:11:43 2026 Level-1: Greet, Echo, Exit
+451df09 Sat Feb 7 21:10:24 2026 Level-0: Greet
+681ed8d Sat Jan 4 21:45:23 2025 README: Use correct item number in list
+996db97 Sat Jan 4 21:44:28 2025 README: Ask to keep source folder structure
+339e32c Thu Jul 11 16:50:14 2024 README: Update the JDK version 11 -> 17
+7e94157 Sun Jan 7 18:33:52 2024 docs/README.md: Tweak document template
+eac21c0 Thu Dec 29 13:56:26 2022 .gitignore: Fix ACTUAL.txt -> ACTUAL.TXT  (#73)
+843d951 Thu Jul 29 20:29:39 2021 README: Mention the project language level setting
+e5289a1 Sat Jul 17 16:49:07 2021 README.md: Tweak template text
+f1b33e0 Sun Jan 17 12:25:53 2021 README: Update setup instructions to match the latest IDE version
+47aa18d Tue Aug 25 17:23:26 2020 Improve runtest.* scripts
+2e31da8 Sat Jul 4 01:45:26 2020 README.md: Fix typo of => or
+4e20647 Mon May 25 00:03:55 2020 Add text-ui-test files
+aae0720 Sun May 24 23:34:49 2020 Remove generic tutorials
+eec3548 Tue Feb 11 15:13:03 2020 Remove unnecessary override annotation
+41a1232 Fri Sep 20 16:05:59 2019 JavaFX tutorial: Support cross-platform JARs
+506d011 Sat Aug 31 16:40:20 2019 Change indentation in FXML samples to match AB-3
+848c3cc Fri Aug 16 16:58:43 2019 Remove references to DukeStub
+064f361 Thu Aug 15 14:05:46 2019 Add images to JavaFX tutorial 3
+a6ce3d6 Thu Aug 15 13:59:56 2019 Fix typo referring to `HelloWorld`
+33065e2 Wed Aug 14 15:35:46 2019 Update Gradle tutorial to reflect new checkstyle config
+bad66fc Mon Aug 12 14:24:27 2019 Adapt JavaFX tutorial for Duke
+5c47c23 Tue Aug 6 20:38:08 2019 Specify checkstyle version
+a2150c1 Tue Aug 6 20:10:10 2019 textUiTestingTutorial.md: mention updating java/javac commands
+2d06f90 Tue Aug 6 19:54:03 2019 textUiTestingTutorial.md: add missing <br>
+5c491d3 Tue Aug 6 19:50:20 2019 Add a tutorial on text UI testing
+53c0460 Tue Aug 6 15:15:04 2019 Update list of contributors
+21af6a1 Tue Aug 6 15:06:11 2019 Fix typo in link to checkstyle config files
+8fe8afd Mon Aug 5 19:29:40 2019 README: use numbered list for steps
+f20bff2 Mon Aug 5 19:26:04 2019 Tweak tutorial text
+6a7120c Mon Aug 5 19:08:53 2019 Move Duke.java out of the package
+6bb6b9f Mon Aug 5 19:08:08 2019 .gitignore: add *.iml
+946f3bb Mon Jul 29 17:14:46 2019 Import base branch for students to start off
+245013d Mon Jul 29 17:14:46 2019 Initial commit
