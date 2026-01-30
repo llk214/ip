@@ -8,8 +8,8 @@ public class Duke {
                 + "| |___| | (_| | |_| | (_| |  __/\n"
                 + " \\____|_|\\__,_|\\__,_|\\__,_|\\___|\n";
 
-        // Array to store tasks (max 100)
-        String[] tasks = new String[100];
+        // Array to store Task objects (max 100)
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         String line = "____________________________________________________________";
@@ -28,12 +28,25 @@ public class Duke {
 
             if (input.equals("list")) {
                 // Display all tasks
+                System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i]);
+                    System.out.println((i + 1) + "." + tasks[i]);
                 }
+            } else if (input.startsWith("mark ")) {
+                // Mark task as done
+                int taskIndex = Integer.parseInt(input.substring(5)) - 1;
+                tasks[taskIndex].markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("  " + tasks[taskIndex]);
+            } else if (input.startsWith("unmark ")) {
+                // Mark task as not done
+                int taskIndex = Integer.parseInt(input.substring(7)) - 1;
+                tasks[taskIndex].markAsNotDone();
+                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.println("  " + tasks[taskIndex]);
             } else {
                 // Add the task
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
                 System.out.println("added: " + input);
             }
