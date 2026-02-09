@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+/**
+ * Main class for the Claude chatbot application.
+ * Manages task creation, listing, and marking through a command-line interface.
+ */
 public class Claude {
     private static final int MAX_TASKS = 100;
     private static final String LINE = "____________________________________________________________";
@@ -7,6 +11,11 @@ public class Claude {
     private static Task[] tasks = new Task[MAX_TASKS];
     private static int taskCount = 0;
 
+    /**
+     * Starts the Claude chatbot and processes user commands in a loop.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         printWelcome();
 
@@ -22,6 +31,9 @@ public class Claude {
         scanner.close();
     }
 
+    /**
+     * Prints the welcome message with the Claude ASCII logo.
+     */
     private static void printWelcome() {
         String logo = "  ____ _                 _      \n"
                 + " / ___| | __ _ _   _  __| | ___ \n"
@@ -36,12 +48,20 @@ public class Claude {
         System.out.println(LINE);
     }
 
+    /**
+     * Prints the goodbye message.
+     */
     private static void printGoodbye() {
         System.out.println(LINE);
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(LINE);
     }
 
+    /**
+     * Routes the user input to the appropriate command handler.
+     *
+     * @param input The raw user input string.
+     */
     private static void handleCommand(String input) {
         System.out.println(LINE);
 
@@ -64,6 +84,9 @@ public class Claude {
         System.out.println(LINE);
     }
 
+    /**
+     * Prints all tasks in the task list.
+     */
     private static void listTasks() {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {
@@ -71,6 +94,11 @@ public class Claude {
         }
     }
 
+    /**
+     * Marks a task as done based on the user input.
+     *
+     * @param input The user input containing the task number to mark.
+     */
     private static void markTask(String input) {
         int taskIndex = Integer.parseInt(input.substring(5)) - 1;
         tasks[taskIndex].markAsDone();
@@ -78,6 +106,11 @@ public class Claude {
         System.out.println("  " + tasks[taskIndex]);
     }
 
+    /**
+     * Marks a task as not done based on the user input.
+     *
+     * @param input The user input containing the task number to unmark.
+     */
     private static void unmarkTask(String input) {
         int taskIndex = Integer.parseInt(input.substring(7)) - 1;
         tasks[taskIndex].markAsNotDone();
@@ -85,11 +118,21 @@ public class Claude {
         System.out.println("  " + tasks[taskIndex]);
     }
 
+    /**
+     * Parses user input and adds a new Todo task.
+     *
+     * @param input The user input containing the todo description.
+     */
     private static void addTodo(String input) {
         String description = input.substring(5);
         addTask(new Todo(description));
     }
 
+    /**
+     * Parses user input and adds a new Deadline task.
+     *
+     * @param input The user input containing the deadline description and due date.
+     */
     private static void addDeadline(String input) {
         String[] parts = input.substring(9).split(" /by ");
         String description = parts[0];
@@ -97,6 +140,11 @@ public class Claude {
         addTask(new Deadline(description, by));
     }
 
+    /**
+     * Parses user input and adds a new Event task.
+     *
+     * @param input The user input containing the event description, start and end times.
+     */
     private static void addEvent(String input) {
         String[] parts = input.substring(6).split(" /from | /to ");
         String description = parts[0];
@@ -105,12 +153,22 @@ public class Claude {
         addTask(new Event(description, from, to));
     }
 
+    /**
+     * Adds an unrecognized input as a generic Todo task.
+     *
+     * @param input The unrecognized user input to add as a task.
+     */
     private static void addGenericTask(String input) {
         tasks[taskCount] = new Todo(input);
         taskCount++;
         System.out.println("added: " + input);
     }
 
+    /**
+     * Adds a task to the task list and prints a confirmation message.
+     *
+     * @param task The task to add.
+     */
     private static void addTask(Task task) {
         tasks[taskCount] = task;
         taskCount++;
