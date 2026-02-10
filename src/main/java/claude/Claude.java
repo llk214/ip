@@ -1,3 +1,5 @@
+package claude;
+
 import java.util.Scanner;
 
 /**
