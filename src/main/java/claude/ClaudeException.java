@@ -1,3 +1,5 @@
+package claude;
+
 /**
  * Represents an exception specific to the Claude chatbot.
  */

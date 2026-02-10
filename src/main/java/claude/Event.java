@@ -1,3 +1,5 @@
+package claude;
+
 /**
  * Represents a task that spans a time period with a start and end time.
  */

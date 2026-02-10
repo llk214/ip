@@ -1,3 +1,5 @@
+package claude;
+
 /**
  * Represents a task with a description and completion status.
  */
