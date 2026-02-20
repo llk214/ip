@@ -1,5 +1,6 @@
 package claude;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -7,11 +8,9 @@ import java.util.Scanner;
  * Manages task creation, listing, and marking through a command-line interface.
  */
 public class Claude {
-    private static final int MAX_TASKS = 100;
     private static final String LINE = "____________________________________________________________";
 
-    private static Task[] tasks = new Task[MAX_TASKS];
-    private static int taskCount = 0;
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Starts the Claude chatbot and processes user commands in a loop.
@@ -80,6 +79,8 @@ public class Claude {
                 addDeadline(input);
             } else if (input.startsWith("event")) {
                 addEvent(input);
+            } else if (input.startsWith("delete ")) {
+                deleteTask(input);
             } else {
                 throw new ClaudeException("I'm sorry, but I don't know what that means :-(");
             }
@@ -94,8 +95,8 @@ public class Claude {
      */
     private static void listTasks() {
         System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println((i + 1) + "." + tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -107,9 +108,9 @@ public class Claude {
      */
     private static void markTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 5);
-        tasks[taskIndex].markAsDone();
+        tasks.get(taskIndex).markAsDone();
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println("  " + tasks[taskIndex]);
+        System.out.println("  " + tasks.get(taskIndex));
     }
 
     /**
@@ -120,9 +121,9 @@ public class Claude {
      */
     private static void unmarkTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 7);
-        tasks[taskIndex].markAsNotDone();
+        tasks.get(taskIndex).markAsNotDone();
         System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("  " + tasks[taskIndex]);
+        System.out.println("  " + tasks.get(taskIndex));
     }
 
     /**
@@ -141,9 +142,9 @@ public class Claude {
         } catch (NumberFormatException e) {
             throw new ClaudeException("Please provide a valid task number.");
         }
-        if (taskIndex < 0 || taskIndex >= taskCount) {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new ClaudeException("Task number " + (taskIndex + 1) + " is out of range. "
-                    + "You have " + taskCount + " task(s).");
+                    + "You have " + tasks.size() + " task(s).");
         }
         return taskIndex;
     }
@@ -239,15 +240,24 @@ public class Claude {
      * @param task The task to add.
      * @throws ClaudeException If the task list is full.
      */
-    private static void addTask(Task task) throws ClaudeException {
-        if (taskCount >= MAX_TASKS) {
-            throw new ClaudeException("You've reached the Claude free tier limit! "
-                    + "Subscribe to Claude Pro to unlock unlimited tasks ;-)");
-        }
-        tasks[taskCount] = task;
-        taskCount++;
+    private static void addTask(Task task) {
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    /**
+     * Deletes a task from the task list based on the user input.
+     *
+     * @param input The user input containing the task number to delete.
+     * @throws ClaudeException If the task number is invalid or out of range.
+     */
+    private static void deleteTask(String input) throws ClaudeException {
+        int taskIndex = parseTaskIndex(input, 7);
+        Task removed = tasks.remove(taskIndex);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + removed);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 }
