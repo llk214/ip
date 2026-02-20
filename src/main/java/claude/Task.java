@@ -45,6 +45,15 @@ public class Task {
         return description;
     }
 
+    /**
+     * Returns a string representation of this task for saving to a file.
+     *
+     * @return The file format string for this task.
+     */
+    public String toFileString() {
+        return (isDone ? "1" : "0") + " | " + description;
+    }
+
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;

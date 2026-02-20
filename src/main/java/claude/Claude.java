@@ -18,6 +18,7 @@ public class Claude {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        Storage.load(tasks);
         printWelcome();
 
         Scanner scanner = new Scanner(System.in);
@@ -109,6 +110,7 @@ public class Claude {
     private static void markTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 5);
         tasks.get(taskIndex).markAsDone();
+        Storage.save(tasks);
         System.out.println("Nice! I've marked this task as done:");
         System.out.println("  " + tasks.get(taskIndex));
     }
@@ -122,6 +124,7 @@ public class Claude {
     private static void unmarkTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 7);
         tasks.get(taskIndex).markAsNotDone();
+        Storage.save(tasks);
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println("  " + tasks.get(taskIndex));
     }
@@ -238,10 +241,10 @@ public class Claude {
      * Adds a task to the task list and prints a confirmation message.
      *
      * @param task The task to add.
-     * @throws ClaudeException If the task list is full.
      */
     private static void addTask(Task task) {
         tasks.add(task);
+        Storage.save(tasks);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -256,6 +259,7 @@ public class Claude {
     private static void deleteTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 7);
         Task removed = tasks.remove(taskIndex);
+        Storage.save(tasks);
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + removed);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
