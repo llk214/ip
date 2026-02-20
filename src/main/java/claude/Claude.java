@@ -19,6 +19,7 @@ public class Claude {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        taskCount = Storage.load(tasks);
         printWelcome();
 
         Scanner scanner = new Scanner(System.in);
@@ -108,6 +109,7 @@ public class Claude {
     private static void markTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 5);
         tasks[taskIndex].markAsDone();
+        Storage.save(tasks, taskCount);
         System.out.println("Nice! I've marked this task as done:");
         System.out.println("  " + tasks[taskIndex]);
     }
@@ -121,6 +123,7 @@ public class Claude {
     private static void unmarkTask(String input) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 7);
         tasks[taskIndex].markAsNotDone();
+        Storage.save(tasks, taskCount);
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println("  " + tasks[taskIndex]);
     }
@@ -246,6 +249,7 @@ public class Claude {
         }
         tasks[taskCount] = task;
         taskCount++;
+        Storage.save(tasks, taskCount);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
