@@ -33,35 +33,79 @@ public class Storage {
 
     /**
      * Loads tasks from the data file into the given array.
+     * If some lines are corrupted, asks the user whether to recover valid tasks or discard all.
+     * If all lines are corrupted, informs the user and starts fresh.
      *
      * @param tasks The array to load tasks into.
      * @return The number of tasks loaded.
      */
     public static int load(Task[] tasks) {
-        int count = 0;
         File file = new File(FILE_PATH);
         if (!file.exists()) {
             return 0;
         }
+
+        Task[] tempTasks = new Task[tasks.length];
+        int validCount = 0;
+        int totalLines = 0;
+        int corruptedCount = 0;
+
         try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
+            Scanner fileScanner = new Scanner(file);
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine().trim();
                 if (line.isEmpty()) {
                     continue;
                 }
+                totalLines++;
                 try {
-                    tasks[count] = parseTask(line);
-                    count++;
+                    tempTasks[validCount] = parseTask(line);
+                    validCount++;
                 } catch (ClaudeException e) {
-                    System.out.println("Skipping corrupted line: " + line);
+                    corruptedCount++;
                 }
             }
-            scanner.close();
+            fileScanner.close();
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
+            return 0;
         }
-        return count;
+
+        if (totalLines == 0) {
+            return 0;
+        }
+
+        if (corruptedCount == 0) {
+            for (int i = 0; i < validCount; i++) {
+                tasks[i] = tempTasks[i];
+            }
+            return validCount;
+        }
+
+        if (corruptedCount == totalLines) {
+            System.out.println("The save file is fully corrupted. Starting with an empty task list.");
+            return 0;
+        }
+
+        System.out.println("Some data in the save file is corrupted (" + corruptedCount
+                + " out of " + totalLines + " entries).");
+        System.out.println("Would you like to recover the " + validCount + " valid task(s)?");
+        System.out.println("Enter 'yes' to recover, or 'no' to start fresh:");
+
+        Scanner inputScanner = new Scanner(System.in);
+        String response = inputScanner.nextLine().trim().toLowerCase();
+        if (response.equals("yes")) {
+            for (int i = 0; i < validCount; i++) {
+                tasks[i] = tempTasks[i];
+            }
+            save(tasks, validCount);
+            System.out.println("Recovered " + validCount + " task(s).");
+            return validCount;
+        } else {
+            save(tasks, 0);
+            System.out.println("Save file cleared. Starting with an empty task list.");
+            return 0;
+        }
     }
 
     /**
