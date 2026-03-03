@@ -183,17 +183,19 @@ public class Parser {
                     start = ym.atDay(1);
                     end = ym.atEndOfMonth();
                 } catch (DateTimeParseException e2) {
-                    throw new ClaudeException("Invalid date format. "
-                            + "Use yyyy-mm-dd or yyyy-mm.");
+                    throw new ClaudeException(getInvalidDateMessage(parts[0]));
                 }
             }
         } else if (parts.length == 2) {
             try {
                 start = LocalDate.parse(parts[0]);
+            } catch (DateTimeParseException e) {
+                throw new ClaudeException(getInvalidDateMessage(parts[0]));
+            }
+            try {
                 end = LocalDate.parse(parts[1]);
             } catch (DateTimeParseException e) {
-                throw new ClaudeException("Invalid date range. "
-                        + "Use: due <yyyy-mm-dd> <yyyy-mm-dd>");
+                throw new ClaudeException(getInvalidDateMessage(parts[1]));
             }
             if (start.isAfter(end)) {
                 throw new ClaudeException("Start date must not be after end date.");
@@ -214,5 +216,24 @@ public class Parser {
             }
         }
         ui.showDueList(matching, start, end);
+    }
+
+    private static String getInvalidDateMessage(String input) {
+        if (!input.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return "Invalid date format. Use yyyy-mm-dd or yyyy-mm.";
+        }
+        String[] dateParts = input.split("-");
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        int year = Integer.parseInt(dateParts[0]);
+        if (month < 1 || month > 12) {
+            return "Month " + month + "? I don't think that exists in any calendar I know of!";
+        }
+        if (month == 2 && day == 29) {
+            return year + " is not a leap year, so Feb 29 doesn't exist! "
+                    + "Nice try though.";
+        }
+        return "Hmm, " + input + " doesn't seem to be a real date. "
+                + "Did you double-check the day?";
     }
 }
