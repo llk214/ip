@@ -10,20 +10,29 @@ import java.util.Scanner;
  * Handles loading and saving tasks to a file on the hard disk.
  */
 public class Storage {
-    private static final String FILE_PATH = "data" + File.separator + "claude.txt";
+    private String filePath;
+
+    /**
+     * Creates a new Storage with the given file path.
+     *
+     * @param filePath The path to the data file.
+     */
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
 
     /**
      * Saves all tasks to the data file.
      *
-     * @param tasks The list of tasks to save.
+     * @param tasks The task list to save.
      */
-    public static void save(ArrayList<Task> tasks) {
+    public void save(TaskList tasks) {
         try {
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
             file.getParentFile().mkdirs();
             FileWriter writer = new FileWriter(file);
-            for (Task task : tasks) {
-                writer.write(task.toFileString() + System.lineSeparator());
+            for (int i = 0; i < tasks.size(); i++) {
+                writer.write(tasks.get(i).toFileString() + System.lineSeparator());
             }
             writer.close();
         } catch (IOException e) {
@@ -32,16 +41,18 @@ public class Storage {
     }
 
     /**
-     * Loads tasks from the data file into the given list.
+     * Loads tasks from the data file.
      * If some lines are corrupted, asks the user whether to recover valid tasks or discard all.
      * If all lines are corrupted, informs the user and starts fresh.
      *
-     * @param tasks The list to load tasks into.
+     * @return The list of loaded tasks.
+     * @throws ClaudeException If the file is partially corrupted and needs user intervention.
      */
-    public static void load(ArrayList<Task> tasks) {
-        File file = new File(FILE_PATH);
+    public ArrayList<Task> load() throws ClaudeException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
         if (!file.exists()) {
-            return;
+            return tasks;
         }
 
         ArrayList<Task> validTasks = new ArrayList<>();
@@ -65,21 +76,20 @@ public class Storage {
             fileScanner.close();
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
-            return;
+            return tasks;
         }
 
         if (totalLines == 0) {
-            return;
+            return tasks;
         }
 
         if (corruptedCount == 0) {
-            tasks.addAll(validTasks);
-            return;
+            return validTasks;
         }
 
         if (corruptedCount == totalLines) {
             System.out.println("The save file is fully corrupted. Starting with an empty task list.");
-            return;
+            return tasks;
         }
 
         System.out.println("Some data in the save file is corrupted (" + corruptedCount
@@ -90,12 +100,11 @@ public class Storage {
         Scanner inputScanner = new Scanner(System.in);
         String response = inputScanner.nextLine().trim().toLowerCase();
         if (response.equals("yes")) {
-            tasks.addAll(validTasks);
-            save(tasks);
             System.out.println("Recovered " + validTasks.size() + " task(s).");
+            return validTasks;
         } else {
-            save(tasks);
             System.out.println("Save file cleared. Starting with an empty task list.");
+            return tasks;
         }
     }
 
@@ -106,7 +115,7 @@ public class Storage {
      * @return The parsed Task.
      * @throws ClaudeException If the line format is invalid.
      */
-    private static Task parseTask(String line) throws ClaudeException {
+    private Task parseTask(String line) throws ClaudeException {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
             throw new ClaudeException("Invalid format");
