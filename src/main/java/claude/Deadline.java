@@ -29,6 +29,15 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Returns the parsed due date, or null if the date is not in yyyy-mm-dd format.
+     *
+     * @return The due date as a LocalDate, or null.
+     */
+    public LocalDate getByDate() {
+        return byDate;
+    }
+
     @Override
     public String toFileString() {
         if (byDate != null) {

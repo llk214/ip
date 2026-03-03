@@ -1,5 +1,8 @@
 package claude;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -128,6 +131,30 @@ public class Ui {
     public void showTaskUnmarked(Task task) {
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println("  " + task);
+    }
+
+    /**
+     * Prints deadlines due within a date range.
+     *
+     * @param matching The task list of matching deadlines.
+     * @param start The start date of the range.
+     * @param end The end date of the range.
+     */
+    public void showDueList(TaskList matching, LocalDate start, LocalDate end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
+        if (start.equals(end)) {
+            System.out.println("Deadlines due on " + start.format(formatter) + ":");
+        } else {
+            System.out.println("Deadlines due from " + start.format(formatter)
+                    + " to " + end.format(formatter) + ":");
+        }
+        if (matching.size() == 0) {
+            System.out.println("No matching deadlines found.");
+        } else {
+            for (int i = 0; i < matching.size(); i++) {
+                System.out.println((i + 1) + "." + matching.get(i));
+            }
+        }
     }
 
     /**

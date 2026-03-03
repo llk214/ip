@@ -1,5 +1,9 @@
 package claude;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+
 /**
  * Deals with making sense of the user command.
  * Parses user input and executes the corresponding operation on the task list.
@@ -31,6 +35,8 @@ public class Parser {
             executeEvent(input, tasks, ui, storage);
         } else if (input.startsWith("delete ")) {
             executeDelete(input, tasks, ui, storage);
+        } else if (input.startsWith("due")) {
+            executeDue(input, tasks, ui);
         } else {
             throw new ClaudeException("I'm sorry, but I don't know what that means :-(");
         }
@@ -153,5 +159,60 @@ public class Parser {
         Task removed = tasks.delete(taskIndex);
         storage.save(tasks);
         ui.showTaskDeleted(removed, tasks.size());
+    }
+
+    private static void executeDue(String input, TaskList tasks, Ui ui) throws ClaudeException {
+        if (input.trim().equals("due")) {
+            throw new ClaudeException("Please provide a date, month, or date range. "
+                    + "Usage: due <yyyy-mm-dd> | due <yyyy-mm> | due <start> <end>");
+        }
+        String content = input.substring(4).trim();
+        String[] parts = content.split("\\s+");
+
+        LocalDate start;
+        LocalDate end;
+
+        if (parts.length == 1) {
+            // Try as a specific date first, then as a month
+            try {
+                start = LocalDate.parse(parts[0]);
+                end = start;
+            } catch (DateTimeParseException e) {
+                try {
+                    YearMonth ym = YearMonth.parse(parts[0]);
+                    start = ym.atDay(1);
+                    end = ym.atEndOfMonth();
+                } catch (DateTimeParseException e2) {
+                    throw new ClaudeException("Invalid date format. "
+                            + "Use yyyy-mm-dd or yyyy-mm.");
+                }
+            }
+        } else if (parts.length == 2) {
+            try {
+                start = LocalDate.parse(parts[0]);
+                end = LocalDate.parse(parts[1]);
+            } catch (DateTimeParseException e) {
+                throw new ClaudeException("Invalid date range. "
+                        + "Use: due <yyyy-mm-dd> <yyyy-mm-dd>");
+            }
+            if (start.isAfter(end)) {
+                throw new ClaudeException("Start date must not be after end date.");
+            }
+        } else {
+            throw new ClaudeException("Too many arguments. "
+                    + "Usage: due <yyyy-mm-dd> | due <yyyy-mm> | due <start> <end>");
+        }
+
+        TaskList matching = new TaskList();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task instanceof Deadline) {
+                LocalDate byDate = ((Deadline) task).getByDate();
+                if (byDate != null && !byDate.isBefore(start) && !byDate.isAfter(end)) {
+                    matching.add(task);
+                }
+            }
+        }
+        ui.showDueList(matching, start, end);
     }
 }
