@@ -1,5 +1,9 @@
 package claude;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+
 /**
  * Deals with making sense of the user command.
  * Parses user input and executes the corresponding operation on the task list.
@@ -31,6 +35,8 @@ public class Parser {
             executeEvent(input, tasks, ui, storage);
         } else if (input.startsWith("delete ")) {
             executeDelete(input, tasks, ui, storage);
+        } else if (input.startsWith("due")) {
+            executeDue(input, tasks, ui);
         } else {
             throw new ClaudeException("I'm sorry, but I don't know what that means :-(");
         }
@@ -153,5 +159,81 @@ public class Parser {
         Task removed = tasks.delete(taskIndex);
         storage.save(tasks);
         ui.showTaskDeleted(removed, tasks.size());
+    }
+
+    private static void executeDue(String input, TaskList tasks, Ui ui) throws ClaudeException {
+        if (input.trim().equals("due")) {
+            throw new ClaudeException("Please provide a date, month, or date range. "
+                    + "Usage: due <yyyy-mm-dd> | due <yyyy-mm> | due <start> <end>");
+        }
+        String content = input.substring(4).trim();
+        String[] parts = content.split("\\s+");
+
+        LocalDate start;
+        LocalDate end;
+
+        if (parts.length == 1) {
+            // Try as a specific date first, then as a month
+            try {
+                start = LocalDate.parse(parts[0]);
+                end = start;
+            } catch (DateTimeParseException e) {
+                try {
+                    YearMonth ym = YearMonth.parse(parts[0]);
+                    start = ym.atDay(1);
+                    end = ym.atEndOfMonth();
+                } catch (DateTimeParseException e2) {
+                    throw new ClaudeException(getInvalidDateMessage(parts[0]));
+                }
+            }
+        } else if (parts.length == 2) {
+            try {
+                start = LocalDate.parse(parts[0]);
+            } catch (DateTimeParseException e) {
+                throw new ClaudeException(getInvalidDateMessage(parts[0]));
+            }
+            try {
+                end = LocalDate.parse(parts[1]);
+            } catch (DateTimeParseException e) {
+                throw new ClaudeException(getInvalidDateMessage(parts[1]));
+            }
+            if (start.isAfter(end)) {
+                throw new ClaudeException("Start date must not be after end date.");
+            }
+        } else {
+            throw new ClaudeException("Too many arguments. "
+                    + "Usage: due <yyyy-mm-dd> | due <yyyy-mm> | due <start> <end>");
+        }
+
+        TaskList matching = new TaskList();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task instanceof Deadline) {
+                LocalDate byDate = ((Deadline) task).getByDate();
+                if (byDate != null && !byDate.isBefore(start) && !byDate.isAfter(end)) {
+                    matching.add(task);
+                }
+            }
+        }
+        ui.showDueList(matching, start, end);
+    }
+
+    private static String getInvalidDateMessage(String input) {
+        if (!input.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return "Invalid date format. Use yyyy-mm-dd or yyyy-mm.";
+        }
+        String[] dateParts = input.split("-");
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        int year = Integer.parseInt(dateParts[0]);
+        if (month < 1 || month > 12) {
+            return "Month " + month + "? I don't think that exists in any calendar I know of!";
+        }
+        if (month == 2 && day == 29) {
+            return year + " is not a leap year, so Feb 29 doesn't exist! "
+                    + "Nice try though.";
+        }
+        return "Hmm, " + input + " doesn't seem to be a real date. "
+                + "Did you double-check the day?";
     }
 }
