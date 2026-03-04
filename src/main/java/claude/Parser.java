@@ -31,6 +31,8 @@ public class Parser {
             executeEvent(input, tasks, ui, storage);
         } else if (input.startsWith("delete ")) {
             executeDelete(input, tasks, ui, storage);
+        } else if (input.startsWith("find")) {
+            executeFind(input, tasks, ui);
         } else {
             throw new ClaudeException("I'm sorry, but I don't know what that means :-(");
         }
@@ -153,5 +155,26 @@ public class Parser {
         Task removed = tasks.delete(taskIndex);
         storage.save(tasks);
         ui.showTaskDeleted(removed, tasks.size());
+    }
+
+    private static void executeFind(String input, TaskList tasks,
+            Ui ui) throws ClaudeException {
+        if (input.trim().equals("find")) {
+            throw new ClaudeException("Please provide a keyword to search for. "
+                    + "Usage: find <keyword>");
+        }
+        String keyword = input.substring(5).trim();
+        if (keyword.isEmpty()) {
+            throw new ClaudeException("Please provide a keyword to search for. "
+                    + "Usage: find <keyword>");
+        }
+        TaskList matching = new TaskList();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task.getDescription().contains(keyword)) {
+                matching.add(task);
+            }
+        }
+        ui.showFindResults(matching);
     }
 }
