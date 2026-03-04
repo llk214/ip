@@ -54,6 +54,11 @@ public class Task {
         return (isDone ? "1" : "0") + " | " + description;
     }
 
+    /**
+     * Returns a string representation of this task, including status icon and description.
+     *
+     * @return The formatted string for display.
+     */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;

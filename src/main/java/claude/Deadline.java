@@ -38,6 +38,10 @@ public class Deadline extends Task {
         return byDate;
     }
 
+    /**
+     * {@inheritDoc}
+     * Includes the deadline type prefix and due date.
+     */
     @Override
     public String toFileString() {
         if (byDate != null) {
@@ -46,6 +50,10 @@ public class Deadline extends Task {
         return "D | " + super.toFileString() + " | " + by;
     }
 
+    /**
+     * {@inheritDoc}
+     * Formats the due date using "MMM d yyyy" if parseable, otherwise uses the raw string.
+     */
     @Override
     public String toString() {
         if (byDate != null) {

@@ -14,11 +14,18 @@ public class Todo extends Task {
         super(description);
     }
 
+    /**
+     * {@inheritDoc}
+     * Includes the todo type prefix.
+     */
     @Override
     public String toFileString() {
         return "T | " + super.toFileString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();
