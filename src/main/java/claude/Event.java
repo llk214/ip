@@ -20,11 +20,19 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * {@inheritDoc}
+     * Includes the event type prefix and time range.
+     */
     @Override
     public String toFileString() {
         return "E | " + super.toFileString() + " | " + from + "-" + to;
     }
 
+    /**
+     * {@inheritDoc}
+     * Includes the start and end times.
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
