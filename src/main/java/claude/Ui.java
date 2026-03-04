@@ -158,6 +158,22 @@ public class Ui {
     }
 
     /**
+     * Prints the results of a find command.
+     *
+     * @param matching The task list of matching tasks.
+     */
+    public void showFindResults(TaskList matching) {
+        if (matching.size() == 0) {
+            System.out.println("No matching tasks found.");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matching.size(); i++) {
+                System.out.println((i + 1) + "." + matching.get(i));
+            }
+        }
+    }
+
+    /**
      * Prints a message to the user.
      *
      * @param message The message to print.
