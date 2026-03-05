@@ -27,17 +27,17 @@ public class Parser {
             executeMark(input, tasks, ui, storage);
         } else if (input.startsWith("unmark ")) {
             executeUnmark(input, tasks, ui, storage);
-        } else if (input.startsWith("todo")) {
+        } else if (input.equals("todo") || input.startsWith("todo ")) {
             executeTodo(input, tasks, ui, storage);
-        } else if (input.startsWith("deadline")) {
+        } else if (input.equals("deadline") || input.startsWith("deadline ")) {
             executeDeadline(input, tasks, ui, storage);
-        } else if (input.startsWith("event")) {
+        } else if (input.equals("event") || input.startsWith("event ")) {
             executeEvent(input, tasks, ui, storage);
         } else if (input.startsWith("delete ")) {
             executeDelete(input, tasks, ui, storage);
-        } else if (input.startsWith("due")) {
+        } else if (input.equals("due") || input.startsWith("due ")) {
             executeDue(input, tasks, ui);
-        } else if (input.startsWith("find")) {
+        } else if (input.equals("find") || input.startsWith("find ")) {
             executeFind(input, tasks, ui);
         } else {
             throw new ClaudeException("I don't know what that means :-(");
