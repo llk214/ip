@@ -58,7 +58,8 @@ public class Deadline extends Task {
     public String toString() {
         if (byDate != null) {
             return "[D]" + super.toString() + " (by: "
-                    + byDate.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH)) + ")";
+                    + byDate.format(DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH))
+                            .replace("Sep ", "Sept ") + ")";
         }
         return "[D]" + super.toString() + " (by: " + by + ")";
     }

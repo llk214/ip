@@ -40,7 +40,7 @@ public class Parser {
         } else if (input.startsWith("find")) {
             executeFind(input, tasks, ui);
         } else {
-            throw new ClaudeException("I'm sorry, but I don't know what that means :-(");
+            throw new ClaudeException("I don't know what that means :-(");
         }
     }
 

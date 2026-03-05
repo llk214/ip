@@ -94,13 +94,15 @@ public class Storage {
 
         System.out.println("Some data in the save file is corrupted (" + corruptedCount
                 + " out of " + totalLines + " entries).");
-        System.out.println("Would you like to recover the " + validTasks.size() + " valid task(s)?");
+        System.out.println("Would you like to recover the " + validTasks.size()
+                + " valid " + (validTasks.size() == 1 ? "task" : "tasks") + "?");
         System.out.println("Enter 'yes' to recover, or 'no' to start fresh:");
 
         Scanner inputScanner = new Scanner(System.in);
         String response = inputScanner.nextLine().trim().toLowerCase();
         if (response.equals("yes")) {
-            System.out.println("Recovered " + validTasks.size() + " task(s).");
+            System.out.println("Recovered " + validTasks.size() + " "
+                    + (validTasks.size() == 1 ? "task" : "tasks") + ".");
             return validTasks;
         } else {
             System.out.println("Save file cleared. Starting with an empty task list.");

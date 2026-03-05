@@ -38,7 +38,7 @@ Example: `deadline return book /by 2025-12-02`
 
 ```
 Got it. I've added this task:
-  [D][ ] return book (by: Dec 02 2025)
+  [D][ ] return book (by: Dec 2 2025)
 Now you have 2 tasks in the list.
 ```
 
@@ -65,7 +65,7 @@ Format: `list`
 ```
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Dec 02 2025)
+2.[D][ ] return book (by: Dec 2 2025)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
 
@@ -120,7 +120,7 @@ Example: `find book`
 ```
 Here are the matching tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Dec 02 2025)
+2.[D][ ] return book (by: Dec 2 2025)
 ```
 
 ### Listing deadlines due on a date/month/range: `due`
@@ -135,8 +135,8 @@ Format:
 Example: `due 2025-12`
 
 ```
-Deadlines due from Dec 01 2025 to Dec 31 2025:
-1.[D][ ] return book (by: Dec 02 2025)
+Deadlines due from Dec 1 2025 to Dec 31 2025:
+1.[D][ ] return book (by: Dec 2 2025)
 ```
 
 ### Exiting the program: `bye`

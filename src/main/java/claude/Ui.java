@@ -83,9 +83,16 @@ public class Ui {
      * @param tasks The task list to display.
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+        if (tasks.size() == 0) {
+            System.out.println("It seems you do not have any tasks yet.");
+        } else if (tasks.size() == 1) {
+            System.out.println("Here is the task in your list:");
+            System.out.println("1." + tasks.get(0));
+        } else {
+            System.out.println("Here are the tasks in your list:");
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + tasks.get(i));
+            }
         }
     }
 
@@ -111,8 +118,12 @@ public class Ui {
     public void showTaskDeleted(Task task, int totalTasks) {
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + totalTasks + " "
-                + (totalTasks == 1 ? "task" : "tasks") + " in the list.");
+        if (totalTasks == 0) {
+            System.out.println("You have no tasks in the list now.");
+        } else {
+            System.out.println("Now you have " + totalTasks + " "
+                    + (totalTasks == 1 ? "task" : "tasks") + " in the list.");
+        }
     }
 
     /**
@@ -144,11 +155,14 @@ public class Ui {
      */
     public void showDueList(TaskList matching, LocalDate start, LocalDate end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
+        String label = matching.size() == 1 ? "Deadline" : "Deadlines";
         if (start.equals(end)) {
-            System.out.println("Deadlines due on " + start.format(formatter) + ":");
+            System.out.println(label + " due on "
+                    + start.format(formatter).replace("Sep ", "Sept ") + ":");
         } else {
-            System.out.println("Deadlines due from " + start.format(formatter)
-                    + " to " + end.format(formatter) + ":");
+            System.out.println(label + " due from "
+                    + start.format(formatter).replace("Sep ", "Sept ")
+                    + " to " + end.format(formatter).replace("Sep ", "Sept ") + ":");
         }
         if (matching.size() == 0) {
             System.out.println("No matching deadlines found.");
@@ -167,6 +181,9 @@ public class Ui {
     public void showFindResults(TaskList matching) {
         if (matching.size() == 0) {
             System.out.println("No matching tasks found.");
+        } else if (matching.size() == 1) {
+            System.out.println("Here is the matching task in your list:");
+            System.out.println("1." + matching.get(0));
         } else {
             System.out.println("Here are the matching tasks in your list:");
             for (int i = 0; i < matching.size(); i++) {
