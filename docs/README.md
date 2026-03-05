@@ -30,7 +30,7 @@ Now you have 1 task in the list.
 
 ### Adding a deadline: `deadline`
 
-Adds a task with a due date. If the date is in `yyyy-mm-dd` format, it will be stored as a proper date and displayed in a friendly format (e.g., `Dec 02 2025`).
+Adds a task with a due date. If the date is in `yyyy-mm-dd` format (e.g., `2025-12-02`), it will be displayed in a friendly format (e.g., `Dec 2 2025`). Other date formats are accepted but stored as-is.
 
 Format: `deadline DESCRIPTION /by DATE`
 

@@ -53,7 +53,12 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new ClaudeException("Please provide a valid task number.");
         }
-        if (taskIndex < 0 || taskIndex >= tasks.size()) {
+        if (taskIndex < 0) {
+            throw new ClaudeException("We count from 1 here! "
+                    + "You have " + tasks.size() + " "
+                    + (tasks.size() == 1 ? "task" : "tasks") + ".");
+        }
+        if (taskIndex >= tasks.size()) {
             throw new ClaudeException("Task number " + (taskIndex + 1) + " is out of range. "
                     + "You have " + tasks.size() + " "
                     + (tasks.size() == 1 ? "task" : "tasks") + ".");
@@ -117,10 +122,22 @@ public class Parser {
         if (by.isEmpty()) {
             throw new ClaudeException("The /by date of a deadline cannot be empty.");
         }
+        boolean invalidDate = false;
+        if (by.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            try {
+                LocalDate.parse(by);
+            } catch (DateTimeParseException e) {
+                invalidDate = true;
+            }
+        }
         Task task = new Deadline(description, by);
         tasks.add(task);
         storage.save(tasks);
         ui.showTaskAdded(task, tasks.size());
+        if (invalidDate) {
+            ui.showMessage("Hmm, " + by + " doesn't look like a valid date. "
+                    + "I've added it anyway, but you might want to double-check!");
+        }
     }
 
     private static void executeEvent(String input, TaskList tasks, Ui ui,
@@ -143,10 +160,15 @@ public class Parser {
             throw new ClaudeException("An event needs a /to clause. "
                     + "Usage: event <description> /from <start> /to <end>");
         }
-        String[] parts = content.split(" /from | /to ", 3);
-        String description = parts[0].trim();
-        String from = parts[1].trim();
-        String to = parts[2].trim();
+        int fromIndex = content.indexOf(" /from ");
+        int toIndex = content.indexOf(" /to ");
+        if (toIndex < fromIndex) {
+            throw new ClaudeException("/from must come before /to. "
+                    + "Usage: event <description> /from <start> /to <end>");
+        }
+        String description = content.substring(0, fromIndex).trim();
+        String from = content.substring(fromIndex + 7, toIndex).trim();
+        String to = content.substring(toIndex + 5).trim();
         if (description.isEmpty()) {
             throw new ClaudeException("The description of an event cannot be empty.");
         }
@@ -164,6 +186,10 @@ public class Parser {
 
     private static void executeDelete(String input, TaskList tasks, Ui ui,
             Storage storage) throws ClaudeException {
+        if (tasks.size() == 0) {
+            throw new ClaudeException("There's nothing left to delete. "
+                    + "Do you want to delete me?!");
+        }
         int taskIndex = parseTaskIndex(input, 7, tasks);
         Task removed = tasks.delete(taskIndex);
         storage.save(tasks);
