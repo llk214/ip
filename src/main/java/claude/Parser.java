@@ -101,6 +101,9 @@ public class Parser {
         if (content.isEmpty()) {
             throw new ClaudeException("The description of a deadline cannot be empty.");
         }
+        if (content.startsWith("/by ")) {
+            throw new ClaudeException("The description of a deadline cannot be empty.");
+        }
         if (!content.contains(" /by ")) {
             throw new ClaudeException("A deadline needs a /by clause. "
                     + "Usage: deadline <description> /by <date>");
@@ -127,6 +130,9 @@ public class Parser {
         }
         String content = input.substring(6).trim();
         if (content.isEmpty()) {
+            throw new ClaudeException("The description of an event cannot be empty.");
+        }
+        if (content.startsWith("/from ") || content.startsWith("/to ")) {
             throw new ClaudeException("The description of an event cannot be empty.");
         }
         if (!content.contains(" /from ")) {
