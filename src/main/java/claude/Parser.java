@@ -69,17 +69,27 @@ public class Parser {
     private static void executeMark(String input, TaskList tasks, Ui ui,
             Storage storage) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 5, tasks);
-        tasks.get(taskIndex).markAsDone();
+        Task task = tasks.get(taskIndex);
+        if (task.isDone()) {
+            throw new ClaudeException("That task is already done! "
+                    + "No need to mark it again.");
+        }
+        task.markAsDone();
         storage.save(tasks);
-        ui.showTaskMarked(tasks.get(taskIndex));
+        ui.showTaskMarked(task);
     }
 
     private static void executeUnmark(String input, TaskList tasks, Ui ui,
             Storage storage) throws ClaudeException {
         int taskIndex = parseTaskIndex(input, 7, tasks);
-        tasks.get(taskIndex).markAsNotDone();
+        Task task = tasks.get(taskIndex);
+        if (!task.isDone()) {
+            throw new ClaudeException("That task isn't done yet! "
+                    + "No need to unmark it.");
+        }
+        task.markAsNotDone();
         storage.save(tasks);
-        ui.showTaskUnmarked(tasks.get(taskIndex));
+        ui.showTaskUnmarked(task);
     }
 
     private static void executeTodo(String input, TaskList tasks, Ui ui,
@@ -90,6 +100,9 @@ public class Parser {
         String description = input.substring(5).trim();
         if (description.isEmpty()) {
             throw new ClaudeException("The description of a todo cannot be empty.");
+        }
+        if (description.contains("|")) {
+            throw new ClaudeException("Description cannot contain the '|' character.");
         }
         Task task = new Todo(description);
         tasks.add(task);
@@ -118,6 +131,9 @@ public class Parser {
         String by = parts[1].trim();
         if (description.isEmpty()) {
             throw new ClaudeException("The description of a deadline cannot be empty.");
+        }
+        if (description.contains("|")) {
+            throw new ClaudeException("Description cannot contain the '|' character.");
         }
         if (by.isEmpty()) {
             throw new ClaudeException("The /by date of a deadline cannot be empty.");
@@ -171,6 +187,9 @@ public class Parser {
         String to = content.substring(toIndex + 5).trim();
         if (description.isEmpty()) {
             throw new ClaudeException("The description of an event cannot be empty.");
+        }
+        if (description.contains("|")) {
+            throw new ClaudeException("Description cannot contain the '|' character.");
         }
         if (from.isEmpty()) {
             throw new ClaudeException("The /from time of an event cannot be empty.");

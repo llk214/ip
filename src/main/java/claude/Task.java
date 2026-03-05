@@ -26,6 +26,15 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
+    /**
+     * Returns whether this task is done.
+     *
+     * @return true if the task is done, false otherwise.
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
     /** Marks this task as done. */
     public void markAsDone() {
         this.isDone = true;
