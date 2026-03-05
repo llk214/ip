@@ -25,7 +25,7 @@ Example: `todo read book`
 ```
 Got it. I've added this task:
   [T][ ] read book
-Now you have 1 task(s) in the list.
+Now you have 1 task in the list.
 ```
 
 ### Adding a deadline: `deadline`
@@ -39,7 +39,7 @@ Example: `deadline return book /by 2025-12-02`
 ```
 Got it. I've added this task:
   [D][ ] return book (by: Dec 02 2025)
-Now you have 2 task(s) in the list.
+Now you have 2 tasks in the list.
 ```
 
 ### Adding an event: `event`
@@ -53,7 +53,7 @@ Example: `event project meeting /from Mon 2pm /to 4pm`
 ```
 Got it. I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 3 task(s) in the list.
+Now you have 3 tasks in the list.
 ```
 
 ### Listing all tasks: `list`
@@ -106,7 +106,7 @@ Example: `delete 3`
 ```
 Noted. I've removed this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 2 task(s) in the list.
+Now you have 2 tasks in the list.
 ```
 
 ### Finding tasks by keyword: `find`
@@ -135,7 +135,7 @@ Format:
 Example: `due 2025-12`
 
 ```
-Here are the deadlines due from Dec 01 2025 to Dec 31 2025:
+Deadlines due from Dec 01 2025 to Dec 31 2025:
 1.[D][ ] return book (by: Dec 02 2025)
 ```
 

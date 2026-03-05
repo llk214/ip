@@ -55,7 +55,8 @@ public class Parser {
         }
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new ClaudeException("Task number " + (taskIndex + 1) + " is out of range. "
-                    + "You have " + tasks.size() + " task(s).");
+                    + "You have " + tasks.size() + " "
+                    + (tasks.size() == 1 ? "task" : "tasks") + ".");
         }
         return taskIndex;
     }
